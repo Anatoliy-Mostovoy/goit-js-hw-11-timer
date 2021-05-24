@@ -1,30 +1,35 @@
 
-const refs = {
-    days: document.querySelector('[data-value="days"]'),
-    hours: document.querySelector('[data-value="hours"]'),
-    mins: document.querySelector('[data-value="mins"]'),
-    secs: document.querySelector('[data-value="secs"]'),
-}
+// const refs = {
+//     days: document.querySelector('[data-value="days"]'),
+//     hours: document.querySelector('[data-value="hours"]'),
+//     mins: document.querySelector('[data-value="mins"]'),
+//     secs: document.querySelector('[data-value="secs"]'),
+// }
 
-//! Делаем класс 
-
+//! Делаем класс
 class CountdownTimer{
     static description = 'Логика счетчика'
     constructor({selector, targetDate}){
         this.selector = selector;
         this.targetDate = targetDate;
     }
-   
-    start(){
-            const dataID = setInterval(()=>{
-            const currentTime = Date.now();
-            const deltaTime = (this.targetDate-currentTime);
-            const finalTime = this.getTimerComponents(deltaTime);
-            this.updateInterface(finalTime);
-            this.stop(finalTime,dataID)
-        },1000)
-    }
 
+    refs = {
+        days: document.querySelector('[data-value="days"]'),
+        hours: document.querySelector('[data-value="hours"]'),
+        mins: document.querySelector('[data-value="mins"]'),
+        secs: document.querySelector('[data-value="secs"]'),
+    }
+   
+    dataID = setInterval(()=>{
+        const currentTime = Date.now();
+        const deltaTime = (this.targetDate-currentTime);
+        const finalTime = this.getTimerComponents(deltaTime);
+        this.updateInterface(finalTime);
+        this.stop(finalTime,this.dataID)
+    },1000)
+  
+  
     stop({days, hours, mins, secs},id){
         if(days === `00` &&
         hours === `00`&&
@@ -34,12 +39,12 @@ class CountdownTimer{
            alert('Finish') 
         }
     }
-    
+
     updateInterface({days, hours, mins, secs}){
-        refs.days.textContent = `${days}`;
-        refs.hours.textContent = `${hours}`;
-        refs.mins.textContent = `${mins}`;
-        refs.secs.textContent = `${secs}`;
+        this.refs.days.textContent = `${days}`;
+        this.refs.hours.textContent = `${hours}`;
+        this.refs.mins.textContent = `${mins}`;
+        this.refs.secs.textContent = `${secs}`;
     }
 
     pad(value){
@@ -55,12 +60,10 @@ class CountdownTimer{
     }
 }
 
-const timer = new CountdownTimer({
+new CountdownTimer({
     selector: '#timer-1',
     targetDate: new Date('May 30, 2021'),
 });
-
-timer.start();
 
 // //! Преобразовует число в строку и дописывает слева, до 2-х символов 0.
 // //! 1=01 2=02 12=12
